@@ -88,29 +88,29 @@ public:
     }
 };
 
-int main()
-{
-    MedianFinder m;
-    // m.addNum(6);
-    // cout << m.findMedian() << endl;
-    // m.addNum(10);
-    // cout << m.findMedian() << endl;
-    // m.addNum(2);
-    // cout << m.findMedian() << endl;
-    // m.addNum(6);
-    // cout << m.findMedian() << endl;
-    // m.addNum(5);
-    // cout << m.findMedian() << endl;
-    // m.addNum(0);
-    // m.addNum(6);
-    // m.addNum(3);
-    // m.addNum(1);
-    // m.addNum(0);
-    // m.addNum(0);
-    vector<int> v = {40, 12, 16, 14, 35, 19, 34, 35, 28, 35, 26, 6, 8, 2, 14, 25, 25, 4, 33, 18, 10, 14, 27, 3, 35, 13, 24, 27, 14, 5, 0, 38, 19, 25, 11, 14, 31, 30, 11, 31, 0};
-    for (unsigned int i = 0; i < v.size(); i++)
-    {
-        m.addNum(v[i]);
-        int j = 0;
-    }
-}
+// int main()
+// {
+//     MedianFinder m;
+//     // m.addNum(6);
+//     // cout << m.findMedian() << endl;
+//     // m.addNum(10);
+//     // cout << m.findMedian() << endl;
+//     // m.addNum(2);
+//     // cout << m.findMedian() << endl;
+//     // m.addNum(6);
+//     // cout << m.findMedian() << endl;
+//     // m.addNum(5);
+//     // cout << m.findMedian() << endl;
+//     // m.addNum(0);
+//     // m.addNum(6);
+//     // m.addNum(3);
+//     // m.addNum(1);
+//     // m.addNum(0);
+//     // m.addNum(0);
+//     vector<int> v = {40, 12, 16, 14, 35, 19, 34, 35, 28, 35, 26, 6, 8, 2, 14, 25, 25, 4, 33, 18, 10, 14, 27, 3, 35, 13, 24, 27, 14, 5, 0, 38, 19, 25, 11, 14, 31, 30, 11, 31, 0};
+//     for (unsigned int i = 0; i < v.size(); i++)
+//     {
+//         m.addNum(v[i]);
+//         int j = 0;
+//     }
+// }

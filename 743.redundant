@@ -1,0 +1,154 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+using namespace std;
+
+class UnionFind
+{
+    vector<int> parent;
+    vector<int> size;
+
+public:
+    UnionFind(int num_nodes)
+    {
+        parent.reserve(num_nodes + 1);
+        size.reserve(num_nodes + 1);
+
+        for (int i = 1; i <= num_nodes; i++)
+        {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    int findParent(int n)
+    {
+        if (parent[n] != n)
+            parent[n] = findParent(parent[n]);
+        return parent[n];
+    }
+
+    void combine(int x, int y)
+    {
+        int xP = parent[x];
+        int yP = parent[y];
+
+        if (xP == yP)
+            return;
+
+        if (size[xP] < size[yP])
+            swap(xP, yP);
+
+        parent[yP] = xP;
+        size[xP] += size[yP];
+    }
+};
+
+bool edgeComp(const vector<int> &a, const vector<int> &b)
+{
+    return a[2] < b[2];
+}
+
+vector<vector<int>> minSpanningTree(vector<vector<int>> times, int n)
+{
+    UnionFind disjoint(n);
+    std::sort(times.begin(), times.end(), edgeComp);
+
+    vector<vector<int>> MST;
+    for (auto edge : times)
+    {
+        int u = edge[0];
+        int v = edge[1];
+        int w = edge[2];
+
+        if (disjoint.findParent(u) != disjoint.findParent(v))
+        {
+            MST.push_back(edge);
+            disjoint.combine(u, v);
+        }
+    }
+}
+
+class Compare
+{
+public:
+    bool operator()(pair<int, int> a, pair<int, int> b)
+    {
+        if (a.second > b.second)
+            return true;
+        return false;
+    }
+};
+class ShortestPath
+{
+    map<int, int> unknown;
+    vector<int> distance;
+    vector<bool> visited;
+
+public:
+    ShortestPath(int n)
+    {
+        visited.reserve(n + 1);
+        distance.reserve(n + 1);
+        for (int i = 1; i <= n; i++)
+        {
+            visited[i] = false;
+            distance[i] = INT32_MAX;
+        }
+    }
+
+    vector<int> SSSP(int source, vector<vector<int>> &times)
+    {
+        distance[source] = 0;
+        auto adjList = buildAdj(times);
+        priority_queue<pair<int, int>, vector<pair<int, int>>, Compare> pq;
+        int count = 0;
+
+        pq.push({source, 0});
+        while (pq.empty() == false)
+        {
+            auto v = pq.top();
+            pq.pop();
+            for (auto adj : adjList[v.first])
+            {
+                if (visited[adj.first] == false)
+                {
+                    pq.push({adj.first, distance[v.first] + adj.second});
+                    distance[adj.first] = min(distance[adj.first], distance[v.first] + adj.second);
+                }
+            }
+            visited[v.first] = true;
+            count++;
+            if (count == adjList.size()) break;
+        }
+        return distance;
+    }
+};
+
+vector<vector<pair<int, int>>> buildAdj(vector<vector<int>> &times)
+{
+    vector<vector<pair<int, int>>> adjList;
+    for (auto edge : times)
+    {
+        adjList[edge[0]].push_back({edge[1], edge[2]});
+    }
+    return adjList;
+}
+
+int networkDelayTime(vector<vector<int>> &times, int n, int k)
+{
+    ShortestPath s(n);
+    auto distance = s.SSSP(k, times);
+
+    return *min_element(distance.begin(), distance.end());
+
+
+}
+
+int main()
+{
+    return 0;
+}

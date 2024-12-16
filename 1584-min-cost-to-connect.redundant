@@ -1,0 +1,152 @@
+// You are given an array points representing integer coordinates of some points on a 2D-plane, where points[i] = [xi, yi].
+
+// The cost of connecting two points [xi, yi] and [xj, yj] is the manhattan distance between them: |xi - xj| + |yi - yj|,
+// where |val| denotes the absolute value of val.
+
+// Return the minimum cost to make all points connected. All points are connected if there is exactly one simple
+// path between any two points.
+
+#include <iostream>
+#include <vector>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <climits>
+
+using namespace std;
+
+struct Element
+{
+    pair<int, int> parent;
+    int size;
+    int x;
+    int y;
+
+    Element(int x_coord, int y_coord)
+    {
+        x = x_coord;
+        y = y_coord;
+        size = 1;
+        parent = {x, y};
+    }
+};
+class UnionFind
+{
+    map<pair<int, int>, Element *> mapping;
+
+    public:
+
+    UnionFind(const vector<pair<int, int>> &points)
+    {
+        for (auto point : points)
+        {
+            mapping[point] = new Element(point.first, point.second);
+        }
+    }
+    UnionFind(const vector<vector<int>> &points)
+    {
+        for (auto point : points)
+        {
+            mapping[{point[0], point[1]}] = new Element(point[0], point[1]);
+        }
+    }
+    ~UnionFind() // Destructor to free memory
+    {
+        for (auto &entry : mapping)
+        {
+            delete entry.second;
+        }
+    }
+
+    pair<int, int> findParent(pair<int, int> point)
+    {
+        Element *ptr = mapping[point];
+
+        if (ptr->parent != point)
+            ptr->parent = findParent(ptr->parent);
+        return ptr->parent;
+    }
+
+    void combine(pair<int, int> p1, pair<int, int> p2)
+    {
+        pair<int, int> parent1 = findParent(p1);
+        pair<int, int> parent2 = findParent(p2);
+
+        if (parent1 == parent2)
+            return;
+
+        Element *ptr1 = mapping[parent1];
+        Element *ptr2 = mapping[parent2];
+
+        // Union by size
+        if (ptr1->size < ptr2->size)
+        {
+            swap(ptr1, ptr2);
+        }
+        
+        ptr2->parent = ptr1->parent;
+        ptr1->size += ptr2->size;
+
+    }
+};
+
+int manhattanDist(const vector<int> &p1, const vector<int> &p2)
+{
+    return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1]);
+}
+
+class Compare
+{
+    public:
+    bool operator()(vector<int> a, vector<int> b)
+    {
+        return a[0] > b[0];
+    }
+};
+int minCostConnectPoints(vector<vector<int>> &points)
+{
+    priority_queue<vector<int>, vector<vector<int>>, Compare> pq;
+    for (int i = 0; i < points.size(); i++){
+        for (int j = i + 1; j < points.size();j++){
+            vector<int> point1 = points[i];
+            vector<int> point2 = points[j];
+
+            pq.push({manhattanDist(point1, point2), point1[0], point1[1], point2[0], point2[1]});
+            
+        }
+    }
+
+    UnionFind uf(points);
+
+    int num_points = points.size();
+    // using number of edges in a MST is n - 1
+
+    int num_edges = 0;
+    int cost = 0;
+
+    while(pq.empty() == false && num_edges != num_points - 1){
+        auto element = pq.top();
+        pq.pop();
+        pair<int, int> p1 = {element[1],element[2]};
+        pair<int, int> p2 = {element[3],element[4]};
+        int len = element[0];
+
+        if (uf.findParent(p1) != uf.findParent(p2)){
+            uf.combine(p1, p2);
+            cost += len;
+            num_edges++;
+        }
+    }
+    return cost;
+}
+
+int main()
+{
+    vector<vector<int>> points = {{-8,14},{16,-18},{-19,-13},{-18,19},{20,20},{13,-20},{-15,9},{-4,-8}};
+    cout << minCostConnectPoints(points);
+
+
+}

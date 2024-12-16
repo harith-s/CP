@@ -5,7 +5,6 @@
 
 using namespace std;
 
-vector<vector<char>> mirror_array = {{'\\', '\\'}, {'\\', '/'}};
 
 // changes the position according to the direction
 
@@ -115,12 +114,7 @@ char traverse(int &curr_row, int &curr_col, char direction)
 int main()
 {
 
-    // assuming the array is given as a vector of vectors
-
-    // i is for the row number and j is for column
-
-    int final_i;
-    int final_j;
+    vector<vector<char>> mirror_array;
 
     int curr_row = 0;
     int curr_col = 0;
@@ -129,8 +123,8 @@ int main()
 
     char direction = traverse(curr_row, curr_col, 'd');
 
-    final_i = curr_row;
-    final_j = curr_col;
+    int final_i = curr_row;
+    int final_j = curr_col;
 
     cout << "The ray exits at " << final_i << ", " << final_j << " moving towards " << direction;
 }
